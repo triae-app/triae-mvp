@@ -10,3 +10,4 @@ yarn-error.log*
 
 .env*
 .vercel
+/src/generated/prisma

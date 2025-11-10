@@ -18,6 +18,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.4",
-    "@types/node": "^24.10.0"
+    "@types/node": "^24.10.0",
+    "prisma": "^6.19.0"
+  },
+  "prisma": {
+    "schema": "src/database/schema.prisma"
   }
 }
