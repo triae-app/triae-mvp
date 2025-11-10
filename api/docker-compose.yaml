@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: triae-database
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: docker
+      POSTGRESQL_PASSWORD: docker
+      POSTGRESQL_DATABASE: triae
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d triae-postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
