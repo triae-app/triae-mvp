@@ -68,13 +68,40 @@ model Verification {
 }
 
 model Lead {
-  id        String   @id @default(uuid())
-  name      String
-  email     String?
-  phone     String?
-  company   String?
+  id       String  @id @default(uuid())
+  name     String
+  email    String?
+  phone    String?
+  company  String?
+  statusId String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  status LeadStatus @relation(references: [id], fields: [statusId])
+
   @@map("leads")
+}
+
+model LeadStatus {
+  id          String         @id @default(uuid())
+  name        String         @unique
+  description String?
+  type        StatusTypeEnum
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  leads Lead[]
+
+  @@map("leadStatuses")
+}
+
+enum StatusTypeEnum {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+
+  @@map("statusTypeEnum")
 }
