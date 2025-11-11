@@ -11,12 +11,19 @@ type LeadUpdateInput = z.infer<typeof updateLeadSchema>
 
 export class LeadsService {
 	async getLeads(): Promise<Lead[]> {
-		return prisma.lead.findMany()
+		return prisma.lead.findMany({
+			include: {
+				status: true,
+			},
+		})
 	}
 
 	async getLead(leadId: string): Promise<Lead> {
 		const lead = await prisma.lead.findUnique({
 			where: { id: leadId },
+			include: {
+				status: true,
+			},
 		})
 
 		if (!lead) {
@@ -32,10 +39,14 @@ export class LeadsService {
 			email: leadCreateInput.email?.toLocaleLowerCase().trim(),
 			phone: leadCreateInput.phone,
 			company: leadCreateInput.company,
+			statusId: leadCreateInput.statusId,
 		}
 
 		const leadCreate = await prisma.lead.create({
 			data: leadData,
+			include: {
+				status: true,
+			},
 		})
 
 		return leadCreate
@@ -57,6 +68,9 @@ export class LeadsService {
 			where: { id: leadId },
 			data: {
 				...leadUpdateInput,
+			},
+			include: {
+				status: true,
 			},
 		})
 
