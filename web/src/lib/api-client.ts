@@ -1,24 +1,26 @@
-import { type CookiesFn, getCookie } from 'cookies-next'
-import ky from 'ky'
+import ky, { type KyInstance } from 'ky'
 
-export const api = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_URL,
-  hooks: {
-    beforeRequest: [
-      async (request) => {
-        let cookieStore: CookiesFn | undefined
+const SESSION_TOKEN_COOKIE_NAME = 'better-auth.session_token'
 
-        if (typeof window === 'undefined') {
-          const { cookies: serverCookies } = await import('next/headers')
-
-          cookieStore = serverCookies
-        }
-        const token = getCookie('token', { cookies: cookieStore })
-
-        if (token) {
-          request.headers.set('Authorization', token as string)
-        }
-      },
-    ],
-  },
+export const api: KyInstance = ky.create({
+	prefixUrl: process.env.NEXT_PUBLIC_API_URL,
+	credentials: 'include',
 })
+
+export function createApiClient(sessionToken?: string): KyInstance {
+	return ky.create({
+		prefixUrl: process.env.NEXT_PUBLIC_API_URL,
+		hooks: {
+			beforeRequest: [
+				async (request) => {
+					if (sessionToken) {
+						request.headers.set(
+							'Cookie',
+							`${SESSION_TOKEN_COOKIE_NAME}=${sessionToken}`,
+						)
+					}
+				},
+			],
+		},
+	})
+}

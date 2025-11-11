@@ -1,11 +1,15 @@
-'use client'
-
 import { Plus } from 'lucide-react'
+import { getLeads } from '@/actions/get-leads'
+import { LeadsTable } from '@/components/tables/leads/table'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Page, PageContent, PageHeader } from '@/components/ui/page'
 
-export default function Leads() {
+export default async function Leads() {
+	const fetchLeads = await getLeads()
+
+	const leadsData = fetchLeads ?? []
+
 	return (
 		<Page>
 			<PageHeader>
@@ -33,7 +37,9 @@ export default function Leads() {
 				</div>
 			</PageHeader>
 			<PageContent>
-				<span>Leads</span>
+				<div className="bg-card/30 rounded-[10px] border border-input/50">
+					<LeadsTable leads={leadsData} />
+				</div>
 			</PageContent>
 		</Page>
 	)
