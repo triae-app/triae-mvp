@@ -35,7 +35,7 @@ app.register(fastifySwagger, {
 app.register(httpRoutes, { prefix: 'api' })
 
 app.register(ScalarApiReference, {
-	prefix: 'docs',
+	routePrefix: '/docs',
 })
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
